@@ -34,8 +34,6 @@ pip install PyAudio Pygame numpy
 ```
 
 
-## OST Python module
-
 ## Real time demonstration
 
 ## Contact and contributors
