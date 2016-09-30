@@ -2,13 +2,15 @@
 """
 Created on Thu Sep  1 09:40:14 2016
 
-@author: rflamary
+@author: Rémi Flamary
 """
 import numpy as np
 
 
 def get_metric(metric,midi_notes,Fe,nfft,nz=1e4,eps=10,**kwargs):
-
+    """
+    returns the optimal transport loss matrix from a list of midi notes (interger indexes)
+    """
     nbnotes=len(midi_notes)
     res=np.zeros((nfft/2,nbnotes))
     f=np.fft.fftfreq(nfft,1.0/Fe)[:nfft/2]
@@ -33,7 +35,9 @@ def get_metric(metric,midi_notes,Fe,nfft,nz=1e4,eps=10,**kwargs):
 
 def unmix_plan_fundamental(midi_notes,Fe,nfft):
     """
-    return the index of the sample nearest from the fundamental for each midi
+    returns the index of the sample nearest from the fundamental for each midi
+    
+    Those indexes can be used for simple poxer based unmixing
 
     """
     f=np.fft.fftfreq(nfft,1.0/Fe)[:nfft/2]
@@ -42,7 +46,7 @@ def unmix_plan_fundamental(midi_notes,Fe,nfft):
 
 def unmix_fun_fundamental(idfund):
     """
-    return the unmixing function for fundamental power using the index of fundamentals
+    returns the unmixing function for fundamental power using the index of fundamentals
     """
     nb=len(idfund)
     def f(x,idf=idfund):
@@ -55,15 +59,13 @@ def unmix_fun_fundamental(idfund):
 
 def unmix_plan_lp(M):
     """
-    return the index of the note with minimum cost for each sample
-
+    returns the index of the note with minimum cost for each sample (OST unmixing)
     """
     return [np.argmin(M[i,:]) for i in range(M.shape[0])]
 
 def unmix_fun_lp(idlp,nb):
     """
-    return the unmixing function for lp (using idlp pre-computed plan)
-
+    returns the unmixing function for OST unmixing (using idlp pre-computed plan)
     """
     def f(x,idf=idlp,nb=nb):
         res=np.zeros((nb,))
@@ -74,7 +76,9 @@ def unmix_fun_lp(idlp,nb):
 
 def unmix_fun_lp_sparse(M,mu,nbiter=2,eps=1e-6,**kwargs):
     nb=M.shape[1]
-
+    """
+    returns the unmixing function for sparse OST unmixing 
+    """
     def f(x,M=M,mu=mu,nbiter=nbiter,eps=eps):
         w=np.zeros((1,nb))
         for it in range(nbiter):
@@ -91,19 +95,25 @@ def unmix_fun_lp_sparse(M,mu,nbiter=2,eps=1e-6,**kwargs):
 
 def unmix_plan_entrop(M,lambd):
     """
-    return the index of the note with minimum cost for each sample
+    returns the rpe compute L plan for entropic regularized OST
 
     """
     E=np.exp(-M/lambd/M.max())
     return E*1./(E.sum(1).reshape((M.shape[0],1)))
 
 def unmix_fun_entrop(L):
+    """
+    returns the unmixing function for entropic OST unmixing 
+    """    
     def f(x,L=L):
         return L.T.dot(x)
     return f
 
 def get_unmix_fun(midi_notes,Fe,nfft,method='fund',metric='psquare',lambd=1e-3,**kwargs):
+    """
+    returns the unmixing function for all methods (easy to change)
 
+    """
     if method.lower()=='fund':
         idfund=unmix_plan_fundamental(midi_notes,Fe,nfft)
         f=unmix_fun_fundamental(idfund)

@@ -1,4 +1,4 @@
-# OST
+# OST : Optimal Spectral Transportation
 Optimal Spectral Transportation : audio musical unmixing using optimal transport.
 
 
