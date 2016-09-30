@@ -52,7 +52,7 @@ def is_caps():
     return pygame.key.get_mods() & pygame.KMOD_SHIFT or  pygame.key.get_mods() & pygame.KMOD_CAPS
 
 
-CHUNK = 4092
+CHUNK = 4096
 WIDTH = 2
 CHANNELS = 1
 RATE = 44100
