@@ -29,7 +29,7 @@ nb_midi=len(midi_notes)
 method=0
 mu=1e3
 
-methodsname=['P. Fond.','OST+noise','OST+sparse','OSTe+noise']
+methodsname=['P. Fund.','OST','OST+sparse','OST+entrop']
 nbmethods=len(methodsname)
 
 def get_unmix_fun(method,mu):
@@ -76,7 +76,7 @@ world.set_palette(pal)
 data=np.array(np.zeros((height,width)),dtype=int)
 
 
-cstart=130
+cstart=150
 
 col=cstart
 sc_pow=20
@@ -143,7 +143,7 @@ ptunmix = get_pos(tunmix,20)
 tpscale3=font2.render('Scale={} (U/u)'.format(sc_prop0), 1, color_text)
 ppscale3 = get_pos(tpscale3,nbmethods*20+40)
 
-tpreg=font2.render('Reg_g={:1.3e} (G/g)'.format(mu), 1, color_text)
+tpreg=font2.render('Reg_g={:1.1e} (G/g)'.format(mu), 1, color_text)
 ppreg = get_pos(tpscale3,nbmethods*20+60)
 
 tnotes=[]
@@ -279,7 +279,7 @@ while 1:
             tfmax=font2.render('Fmax={:5.1f} Hz'.format(fmax), 1, color_text)
             tpscale2=font2.render('Scale={:4.1f} (S/s)'.format(sc_spec), 1, color_text)
             tpscale3=font2.render('Scale={:4.1f} (U/u)'.format(sc_prop0), 1, color_text)
-            tpreg=font2.render('Reg_g={} (G/g)'.format(mu), 1, color_text)
+            tpreg=font2.render('Reg_g={:1.1e} (G/g)'.format(mu), 1, color_text)
 
     dt = stream.read(CHUNK)
     sig = (np.fromstring(dt, dtype=np.int16))*1.0/32768

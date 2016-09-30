@@ -23,11 +23,12 @@ This repository contains only the ost.py Python module and a demo script.
 
 ## Contact and contributors
 
-* [RÃ©mi Flamary](http://remi.flamary.com/)
+* [Rémi Flamary](http://remi.flamary.com/)
 * [Nicolas Courty](http://people.irisa.fr/Nicolas.Courty/)
 
 ## Aknowledgements
 
-We want to thank [ Jose M. Bioucas Dias](http://www.lx.it.pt/~bioucas/publications.html) for providing the unmixing dataset and functions on his website.
+We want to thank [Antony Schutz](http://www.antonyschutz.com/) for composing and providing us the sample files in the data folder.
+
 
 # References
