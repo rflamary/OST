@@ -4,7 +4,7 @@ Optimal Spectral Transportation : audio musical unmixing using optimal transport
 
 This repository contains a Python implementation of Optimal Spectral Transportation, a method proposed in the following NIPS 2016 paper:
 
-R. Flamary, C. Févotte, N. Courty, V. Emyia, "Optimal spectral transportation with application to music transcription", Neural Information Processing Systems (NIPS), 2016.
+R. Flamary, C. FÃ©votte, N. Courty, V. Emyia, "Optimal spectral transportation with application to music transcription", Neural Information Processing Systems (NIPS), 2016.
 
 It also contains a real time demonstration of the proposed method illustrated below.
 
@@ -33,12 +33,17 @@ The python dependencies can also be installed via pip
 pip install PyAudio Pygame numpy
 ```
 
+Under MacOSX, if there is a problem when installing pyaudio with pip, you need to install the portausio library with Homebrew.
+```bash
+brew install portaudio
+```
+
 
 ## Real time demonstration
 
 ## Contact and contributors
 
-* [Rémi Flamary](http://remi.flamary.com/)
+* [RÃ©mi Flamary](http://remi.flamary.com/)
 * [Nicolas Courty](http://people.irisa.fr/Nicolas.Courty/)
 * [Antony Schutz](http://www.antonyschutz.com/) (audio samples)
 
