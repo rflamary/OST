@@ -5,10 +5,10 @@ Created on Thu Sep  1 09:40:14 2016
 @author: rflamary
 """
 import numpy as np
-#import matplotlib.pylab as pl
 
 
 def get_metric(metric,midi_notes,Fe,nfft,nz=1e4,eps=10,**kwargs):
+
     nbnotes=len(midi_notes)
     res=np.zeros((nfft/2,nbnotes))
     f=np.fft.fftfreq(nfft,1.0/Fe)[:nfft/2]
@@ -24,27 +24,26 @@ def get_metric(metric,midi_notes,Fe,nfft,nz=1e4,eps=10,**kwargs):
                 nmax=int(f.max()/f_note[i])
                 m[:]=np.inf
                 for j in range(1,nmax+1):
-                    m=np.minimum(m,(j*f_note[i]-f)**2+j*eps)        
+                    m=np.minimum(m,(j*f_note[i]-f)**2+j*eps)
         res[:,i]=m
-        
-    
-    
+
+
+
     return res,f
-    
+
 def unmix_plan_fundamental(midi_notes,Fe,nfft):
     """
     return the index of the sample nearest from the fundamental for each midi
-    
+
     """
     f=np.fft.fftfreq(nfft,1.0/Fe)[:nfft/2]
     f_note=[2.0**((n-60)*1./12)*440 for n in midi_notes]
     return [np.argmin((fn-f)**2) for fn in f_note]
-    
+
 def unmix_fun_fundamental(idfund):
     """
     return the unmixing function for fundamental power using the index of fundamentals
-    
-    """    
+    """
     nb=len(idfund)
     def f(x,idf=idfund):
         res=np.zeros((nb,))
@@ -53,29 +52,29 @@ def unmix_fun_fundamental(idfund):
         res/=res.sum()
         return res
     return f
-    
+
 def unmix_plan_lp(M):
     """
     return the index of the note with minimum cost for each sample
-    
+
     """
     return [np.argmin(M[i,:]) for i in range(M.shape[0])]
-    
+
 def unmix_fun_lp(idlp,nb):
     """
     return the unmixing function for lp (using idlp pre-computed plan)
-    
-    """    
+
+    """
     def f(x,idf=idlp,nb=nb):
         res=np.zeros((nb,))
         for i in range(len(idf)):
             res[idf[i]]+=x[i]
         return res
-    return f 
-    
+    return f
+
 def unmix_fun_lp_sparse(M,mu,nbiter=2,eps=1e-6,**kwargs):
     nb=M.shape[1]
-    
+
     def f(x,M=M,mu=mu,nbiter=nbiter,eps=eps):
         w=np.zeros((1,nb))
         for it in range(nbiter):
@@ -86,25 +85,25 @@ def unmix_fun_lp_sparse(M,mu,nbiter=2,eps=1e-6,**kwargs):
                 res[isel]+=x[i]
             w=mu*1.0/(np.sqrt(res)+eps)
         return res
-    
+
     return f
 
 
 def unmix_plan_entrop(M,lambd):
     """
     return the index of the note with minimum cost for each sample
-    
+
     """
     E=np.exp(-M/lambd/M.max())
     return E*1./(E.sum(1).reshape((M.shape[0],1)))
-    
+
 def unmix_fun_entrop(L):
     def f(x,L=L):
         return L.T.dot(x)
-    return f 
+    return f
 
 def get_unmix_fun(midi_notes,Fe,nfft,method='fund',metric='psquare',lambd=1e-3,**kwargs):
-    
+
     if method.lower()=='fund':
         idfund=unmix_plan_fundamental(midi_notes,Fe,nfft)
         f=unmix_fun_fundamental(idfund)
@@ -116,25 +115,7 @@ def get_unmix_fun(midi_notes,Fe,nfft,method='fund',metric='psquare',lambd=1e-3,*
         M,f=get_metric(metric,midi_notes,Fe,nfft,**kwargs)
         L=unmix_plan_entrop(M,lambd)
         f=unmix_fun_entrop(L)
-    elif method.lower() in ['lp_sparse','ost_sparse']:
+    elif method.lower() in ['lp_sparse','ost_sparse','ostg']:
         M,f=get_metric(metric,midi_notes,Fe,nfft,**kwargs)
-        f=unmix_fun_lp_sparse(M,**kwargs)   
+        f=unmix_fun_lp_sparse(M,**kwargs)
     return f
-
-#Fe=44100
-#nfft=4096
-
-#midi_notes=[0]
-#midi_notes.extend(list(range(72,95+1)))
-##midi_notes=np.arange(72,95+1)
-#metric='psquare'
-#M,f=get_metric(metric,midi_notes,Fe,nfft)
-
-#idfund=unmix_plan_fundamental(midi_notes,Fe,nfft)
-#idlp=unmix_plan_lp(M)
-#L=unmix_plan_entrop(M,1e-4)
-
-
-#pl.figure(1)
-#pl.clf()
-#pl.plot(f,L)
