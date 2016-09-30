@@ -13,6 +13,26 @@ It also contains a real time demonstration of the proposed method illustrated be
 
 This repository contains only the ost.py Python module and a demo script.
 
+The ost.py module require only numpy. The real time demonstration that unmix the sound of your microphone requires thoss dependencies.
+
+```
+numpy
+pyaudio
+pygame
+```
+
+The dependencies can be installed opn a debian-like linux with the following command
+
+```bash
+sudo apt-get install python-numpy python-pyaudio python-pygame
+```
+
+The python dependencies can also be installed via pip
+
+```bash
+pip install PyAudio Pygame numpy
+```
+
 
 ## OST Python module
 
