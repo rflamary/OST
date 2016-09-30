@@ -49,4 +49,4 @@ brew install portaudio
 
 ## Acknowledgements
 
-We want to thank [Antony Schutz](http://www.antonyschutz.com/) for composing and providing us the sample files in the data folder.
+We want to thank [Antony Schutz](http://www.antonyschutz.com/) (@DeVerMyst) for composing and providing us the sample files in the data folder.
