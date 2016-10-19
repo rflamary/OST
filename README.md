@@ -8,6 +8,8 @@ R. Flamary, C. Févotte, N. Courty, V. Emyia, "Optimal spectral transportation w
 
 It also contains a real time demonstration of the proposed method illustrated below.
 
+![screenshotost](https://cloud.githubusercontent.com/assets/1386873/19514575/4e47232a-95f4-11e6-9cd2-3e426d645433.png)
+
 
 ## Installation and dependencies
 
