@@ -5,18 +5,18 @@ Created on Thu Sep  1 09:40:14 2016
 @author: Rémi Flamary
 """
 import numpy as np
-
+import scipy.fftpack
 
 def get_metric(metric,midi_notes,Fe,nfft,nz=1e4,eps=10,**kwargs):
     """
     returns the optimal transport loss matrix from a list of midi notes (interger indexes)
     """
     nbnotes=len(midi_notes)
-    res=np.zeros((nfft/2,nbnotes))
-    f=np.fft.fftfreq(nfft,1.0/Fe)[:nfft/2]
+    res=np.zeros((nfft//2,nbnotes))
+    f=np.fft.fftfreq(nfft,1.0/Fe)[:nfft//2]
     f_note=[2.0**((n-60)*1./12)*440 for n in midi_notes]
     for i in range(nbnotes):
-        m=np.zeros((nfft/2,))
+        m=np.zeros((nfft//2,))
         if metric=='square':
             m=(f_note[i]-f)**2
         elif metric=='psquare':
@@ -40,7 +40,7 @@ def unmix_plan_fundamental(midi_notes,Fe,nfft):
     Those indexes can be used for simple poxer based unmixing
 
     """
-    f=np.fft.fftfreq(nfft,1.0/Fe)[:nfft/2]
+    f=np.fft.fftfreq(nfft,1.0/Fe)[:nfft//2]
     f_note=[2.0**((n-60)*1./12)*440 for n in midi_notes]
     return [np.argmin((fn-f)**2) for fn in f_note]
 
@@ -120,7 +120,7 @@ def get_unmix_fun(midi_notes,Fe,nfft,method='fund',metric='psquare',lambd=1e-3,*
     elif method.lower() in ['lp','ost']:
         M,f=get_metric(metric,midi_notes,Fe,nfft,**kwargs)
         idlp=unmix_plan_lp(M)
-        f=unmix_fun_lp(idlp,nfft/2)
+        f=unmix_fun_lp(idlp,nfft//2)
     elif method.lower() in ['oste','entrop']:
         M,f=get_metric(metric,midi_notes,Fe,nfft,**kwargs)
         L=unmix_plan_entrop(M,lambd)

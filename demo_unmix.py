@@ -10,6 +10,7 @@ import pyaudio
 import numpy as np
 import sys, pygame
 import ost
+import scipy.fftpack
 
 
 
@@ -84,7 +85,7 @@ pygame.display.set_caption('OST demonstration')
 
 
 # color palette
-pal = [(max((x-128)*2,0),x,min(x*2,255)) for x in xrange(256)]
+pal = [(max((x-128)*2,0),x,min(x*2,255)) for x in range(256)]
 
 # background image
 world=pygame.Surface((width,height),depth=8) # MAIN SURFACE
@@ -227,53 +228,53 @@ while 1:
                 sys.exit()
             if event.key in [pygame.K_PLUS,270] :
                 nfft*=2
-                print'nfft:', nfft
+                print('nfft:', nfft)
             if event.key in [pygame.K_MINUS,269] :
                 if nfft>nfftvisu*2:
                     nfft/=2
-                print 'nfft:',nfft
+                print( 'nfft:',nfft)
             if event.key in [pygame.K_n] :
                 if is_caps():
                     nfft*=2
                 elif nfft>nfftvisu*2:
                     nfft/=2
                 CHUNK=nfft
-                print 'nfft:',nfft
+                print( 'nfft:',nfft)
             if event.key in [pygame.K_w] :
                 if is_caps():
                     CHUNK*=2
                 elif CHUNK>512:
                     CHUNK/=2
                 nfft=CHUNK
-                print 'frame:',CHUNK
+                print('frame:',CHUNK)
 
             if event.key in [pygame.K_p] :
                 if is_caps():
                     sc_pow*=1.5
                 else:
                     sc_pow/=1.5
-                print 'Pow scale:',sc_pow
+                print('Pow scale:',sc_pow)
             if event.key in [pygame.K_u] :
                 if is_caps():
                     sc_prop0*=1.5
                 else:
                     sc_prop0/=1.5
-                print 'Unmix scale:',sc_pow
+                print('Unmix scale:',sc_pow)
             if event.key in [pygame.K_g] :
                 if is_caps():
                     mu*=1.5
                 else:
                     mu/=1.5
                 f_unmix=get_unmix_fun(method,mu)
-                print 'Reg_g:',mu
+                print('Reg_g:',mu)
             if event.key in [pygame.K_b] :
                 pmax=pw
-                print 'Pow bkgrnd:',pmax
+                print('Pow bkgrnd:',pmax)
             if event.key in [pygame.K_m] :
                 method=(method+1)%nbmethods
                 tmethods,pmethods=get_txtmethods(method,methodsname)
                 f_unmix=get_unmix_fun(method,mu)
-                print 'Change method: ',methodsname[method]
+                print('Change method: ',methodsname[method])
 
             if event.key in [pygame.K_s] :
                 if is_caps():
@@ -285,13 +286,13 @@ while 1:
                     pause=False
                 else:
                     pause=True
-                    print 'Pause'
+                    print('Pause')
 
 
             if event.key in [pygame.K_r] :
                 col=cstart
                 data[:,:]=0
-                print 'reset!'
+                print('reset!')
 
             # update text
             fmax=nfftvisu*RATE/nfft
@@ -316,7 +317,7 @@ while 1:
             pw=0
         if pmax==0:
             pmax=pw
-            print 'Pow bkgrnd:',pmax
+            print('Pow bkgrnd:',pmax)
 
         data[:,col:col+step]=0
         if (pw*sc_pow)>0:
@@ -328,7 +329,7 @@ while 1:
             data[-maxpower:,col+step]=128
 
         # print spetrogram
-        S=np.fft.fftpack.fft(sig,nfft)/nfft
+        S=scipy.fftpack.fft(sig,nfft)/nfft
         spec=(np.log10(np.abs(S[:nfftvisu])+1e-10)+4)*sc_spec
         specv=(np.log10(np.abs(S)+1e-10)+4.5)*sc_spec
 
@@ -350,7 +351,7 @@ while 1:
                 data[-int(spec2[i]*0.7*(nspec)/255)-maxpower-nfftvisu:-maxpower-nfftvisu,cstart+i]=255
 
         # unmixing
-        spu=np.abs(S[:nfft/2])
+        spu=np.abs(S[:nfft//2])
         spu/=spu.sum()
         prop=f_unmix(spu)
         if midi_notes[0]==0:
